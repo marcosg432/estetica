@@ -14,19 +14,20 @@
 ### 1. Conectar via SSH
 
 ```bash
-ssh seu-usuario@seu-servidor.hostinger.com
+ssh root@193.160.119.67
 ```
 
-### 2. Navegar para o diretório do domínio
+### 2. Criar diretório para o projeto (ou navegar para um existente)
 
 ```bash
-cd domains/seu-dominio.com/public_html
+mkdir -p /var/www/estetica
+cd /var/www/estetica
 ```
 
-**OU** se usar subdomínio:
+**OU** se preferir usar outro diretório:
 
 ```bash
-cd domains/seu-dominio.com/subdomains/estetica/public_html
+cd ~/estetica
 ```
 
 ### 3. Clonar o repositório
@@ -111,14 +112,22 @@ pm2 monit
 
 ## 🌐 Configuração do Nginx/Apache (Hostinger)
 
-### Se usar Nginx:
+### Acesso Direto (sem proxy)
 
-Edite o arquivo de configuração do seu domínio e adicione:
+Como você não possui domínio, pode acessar diretamente via IP e porta:
+
+```
+http://193.160.119.67:3010
+```
+
+### Se usar Nginx (opcional - para usar porta 80):
+
+Edite o arquivo de configuração do Nginx (geralmente em `/etc/nginx/sites-available/default`):
 
 ```nginx
 server {
     listen 80;
-    server_name seu-dominio.com www.seu-dominio.com;
+    server_name 193.160.119.67;
 
     location / {
         proxy_pass http://localhost:3010;
@@ -134,14 +143,19 @@ server {
 }
 ```
 
-### Se usar Apache:
+Depois recarregue o Nginx:
+```bash
+nginx -t
+systemctl reload nginx
+```
 
-Adicione no `.htaccess` ou configuração do virtual host:
+### Se usar Apache (opcional - para usar porta 80):
+
+Crie ou edite o arquivo de configuração do Apache:
 
 ```apache
 <VirtualHost *:80>
-    ServerName seu-dominio.com
-    ServerAlias www.seu-dominio.com
+    ServerName 193.160.119.67
 
     ProxyPreserveHost On
     ProxyPass / http://localhost:3010/
@@ -165,7 +179,8 @@ RewriteRule ^(.*)$ http://localhost:3010/$1 [P,L]
 Quando fizer alterações no GitHub:
 
 ```bash
-cd domains/seu-dominio.com/public_html
+cd /var/www/estetica
+# OU cd ~/estetica (se usou outro diretório)
 git pull origin main
 pm2 restart estetica
 ```
@@ -174,10 +189,11 @@ pm2 restart estetica
 
 ## ✅ Verificação Final
 
-1. Acesse: `http://seu-dominio.com`
-2. Verifique se a página carrega corretamente
-3. Teste em diferentes dispositivos (responsividade)
-4. Verifique os logs: `pm2 logs estetica`
+1. Acesse: `http://193.160.119.67:3010`
+2. Se configurou proxy no Nginx/Apache, acesse: `http://193.160.119.67`
+3. Verifique se a página carrega corretamente
+4. Teste em diferentes dispositivos (responsividade)
+5. Verifique os logs: `pm2 logs estetica`
 
 ---
 
