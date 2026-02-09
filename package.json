@@ -1,0 +1,23 @@
+{
+  "name": "estetica-landing-page",
+  "version": "1.0.0",
+  "description": "Landing page premium para especialista em estética avançada e micropigmentação",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "estetica",
+    "micropigmentacao",
+    "landing-page"
+  ],
+  "author": "Jô Viapiana",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
